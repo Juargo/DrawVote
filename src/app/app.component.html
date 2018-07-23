@@ -1,3 +1,14 @@
+<form (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="formGroupExampleInput">Fecha</label>
+    <input type="date" class="form-control" id="formGroupExampleInput" placeholder="Example input">
+  </div>
+  <div class="form-group">
+    <label for="formGroupExampleInput2">Reto</label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+  </div>
+
+
 <div class="card">
   <h5 class="card-header">Artistas participantes</h5>
   <div class="card-body">
@@ -9,9 +20,11 @@
             </div>
           </li>
         </ul>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
   </div>
+  <button type="submit" class="btn btn-success">Crear</button>
 </div>
+
+</form>
 
 
 

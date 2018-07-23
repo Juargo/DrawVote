@@ -10,6 +10,10 @@ export class AppComponent {
   constructor(private _drawcrudservice: DrawvoteCrudService) { }
   public artistas;
 
+  public reto;
+  public fecha;
+  public artistasselected;
+
   ngOnInit() {
     this._drawcrudservice.getArtistas()
       .subscribe(data => {
