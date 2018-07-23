@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { DrawvoteCrudService } from './drawvote-crud.service';
+import { FormBuilder, Validators, FormGroup, FormArray,FormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -7,12 +8,19 @@ import { DrawvoteCrudService } from './drawvote-crud.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(private _drawcrudservice: DrawvoteCrudService) { }
+  constructor(private _drawcrudservice: DrawvoteCrudService, private fb: FormBuilder) { this.createForm()}
   public artistas;
 
-  public reto;
-  public fecha;
-  public artistasselected;
+  EventoForm: FormGroup;
+  
+
+  createForm(){
+    this.EventoForm = this.fb.group({
+      fecha :['', Validators.required],
+      reto: ['', Validators.required],
+      participantes: this.fb.array([])
+    })
+  }
 
   ngOnInit() {
     this._drawcrudservice.getArtistas()
@@ -20,5 +28,26 @@ export class AppComponent {
         console.log(data)
         this.artistas = data;
       })
+      console.log(this.EventoForm)
   }
+
+  onChange(participante:string, isChecked: boolean) {
+    const participanteFormArray = <FormArray>this.EventoForm.controls.participantes;
+  
+    if(isChecked) {
+      participanteFormArray.push(new FormControl(participante));
+    } else {
+      let index = participanteFormArray.controls.findIndex(x => x.value == participante)
+      participanteFormArray.removeAt(index);
+    }
+  }
+
+  onFormSubmit(){
+    if (this.EventoForm.valid) {
+      let event = this.EventoForm.value;
+      console.log(event)
+    }
+  }
+
+
 }
