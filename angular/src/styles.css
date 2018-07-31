@@ -1,1 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
+@font-face {
+    font-family: comic;
+    src: url(./assets/typography/COMICPRO.TTF);
+}
+
+div {
+    font-family: comic;
+}
+
+.outpadd{
+    padding: 1px
+}
+
+.bodymargin{
+    margin-bottom: 4px;
+}
+
+.miostyle{
+    color:white
+}

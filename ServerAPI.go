@@ -6,16 +6,17 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"reflect"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
 
 type Evento struct {
-	fecha         string
+	Fecha         string
 	Reto          string
 	Descripcion   string
-	Participantes []string
+	Participantes string
 }
 
 func main() {
@@ -67,22 +68,31 @@ func insertEvento(w http.ResponseWriter, req *http.Request) {
 	var jsonData Evento
 	err := json.NewDecoder(req.Body).Decode(&jsonData)
 
-	// b, err := ioutil.ReadAll(req.Body)
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// fmt.Printf("%s", b)
-	// var msg Evento
-	// err = json.Unmarshal(b, &msg)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(jsonData)
+	fmt.Println(jsonData.Participantes)
+	fmt.Println(reflect.TypeOf(jsonData.Participantes))
 
-	//sql := "insert into evento (fecha, reto, descripcion, participante) values ('" + b.fecha + "','" + b.reto + "','" + b.descripcion + "','" + b.participantes + "')"
+	db, err := sql.Open("mysql", "jorge:jorge@tcp(192.168.0.8:3306)/drawvote")
+	if err != nil {
+		log.Fatal(err)
+	}
+	insForm, err := db.Prepare("INSERT INTO evento (fecha, reto, descripcion, participante) VALUES(?,?,?,?)")
+	if err != nil {
+		panic(err.Error())
+	}
+	_, err = insForm.Exec(jsonData.Fecha, jsonData.Reto, jsonData.Descripcion, "'["+jsonData.Participantes+"]'")
 
-	res2B, _ := json.Marshal("msg")
+	if err != nil {
+		fmt.Println("Cannot run insert statement", err)
+	}
+
+	defer db.Close()
+
+	//sql := "insert into evento (fecha, reto, descripcion, participante) values ('" + jsonData.Fecha + "','" + jsonData.Reto + "','" + jsonData.Descripcion + "','[" + jsonData.Participantes + "]')"
+
+	res2B, _ := json.Marshal("ok")
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
